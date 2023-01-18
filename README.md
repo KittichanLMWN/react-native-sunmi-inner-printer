@@ -16,16 +16,10 @@ for scanner, refer this: https://github.com/januslo/react-native-sunmi-inner-sca
 
 **Step 1.**
 
-install with npm: [Check in NPM](https://www.npmjs.com/package/react-native-sunmi-inner-printer)
-
-```bash
-npm install react-native-sunmi-inner-printer --save
-```
-
-or you may need to install via the clone address directly:
+install via the clone address directly:
 
 ```bash 
-npm install https://github.com/januslo/react-native-sunmi-inner-printer.git --save
+npm install https://github.com/KittichanLMWN/react-native-sunmi-inner-printer.git --save
 ```
 
 **Step 2:**
