@@ -377,13 +377,19 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void lineWrap(int n, final Promise p) {
         final IWoyouService ss = woyouService;
         final int count = n;
-        
-        try {
-            ss.lineWrap(count, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.lineWrap(count, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -393,15 +399,22 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * @param callback 结果回调
      */
     @ReactMethod
-    public void sendRAWData(String base64EncriptedData) {
-        try {
-            final IWoyouService ss = woyouService;
-            final byte[] d = Base64.decode(base64EncriptedData, Base64.DEFAULT);
-            ss.sendRAWData(d, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+    public void sendRAWData(String base64EncriptedData, final Promise p) {
+        final IWoyouService ss = woyouService;
+        final byte[] d = Base64.decode(base64EncriptedData, Base64.DEFAULT);
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.sendRAWData(d, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -411,15 +424,22 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * @param callback   结果回调
      */
     @ReactMethod
-    public void setAlignment(int alignment) {
-        try {
-            final IWoyouService ss = woyouService;
-            final int align = alignment;
-            ss.setAlignment(align, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+    public void setAlignment(int alignment, final Promise p) {
+        final IWoyouService ss = woyouService;
+        final int align = alignment;
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.setAlignment(align, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -432,13 +452,19 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void setFontName(String typeface, final Promise p) {
         final IWoyouService ss = woyouService;
         final String tf = typeface;
-        
-        try {
-            ss.setFontName(tf, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.setFontName(tf, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -450,15 +476,22 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * @param fontsize: 字体大小
      */
     @ReactMethod
-    public void setFontSize(float fontsize) {
-        try{
-            final IWoyouService ss = woyouService;
-            final float fs = fontsize;
-            ss.setFontSize(fs, null);
-        }catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+    public void setFontSize(float fontsize, final Promise p) {
+        final IWoyouService ss = woyouService;
+        final float fs = fontsize;
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.setFontSize(fs, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
 
@@ -475,13 +508,19 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final String txt = text;
         final String tf = typeface;
         final float fs = fontsize;
-        
-        try {
-            ss.printTextWithFont(txt, tf, fs, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printTextWithFont(txt, tf, fs, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -493,26 +532,33 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      *                     备注: 三个参数的数组长度应该一致, 如果colsText[i]的宽度大于colsWidth[i], 则文本换行
      */
     @ReactMethod
-    public void printColumnsText(ReadableArray colsTextArr, ReadableArray colsWidthArr, ReadableArray colsAlign) {
-        try {
-            final IWoyouService ss = woyouService;
-            final String[] clst = new String[colsTextArr.size()];
-            for (int i = 0; i < colsTextArr.size(); i++) {
-                clst[i] = colsTextArr.getString(i);
-            }
-            final int[] clsw = new int[colsWidthArr.size()];
-            for (int i = 0; i < colsWidthArr.size(); i++) {
-                clsw[i] = colsWidthArr.getInt(i);
-            }
-            final int[] clsa = new int[colsAlign.size()];
-            for (int i = 0; i < colsAlign.size(); i++) {
-                clsa[i] = colsAlign.getInt(i);
-            }
-            ss.printColumnsText(clst, clsw, clsa, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
+    public void printColumnsText(ReadableArray colsTextArr, ReadableArray colsWidthArr, ReadableArray colsAlign, final Promise p) {
+        final IWoyouService ss = woyouService;
+        final String[] clst = new String[colsTextArr.size()];
+        for (int i = 0; i < colsTextArr.size(); i++) {
+            clst[i] = colsTextArr.getString(i);
         }
+        final int[] clsw = new int[colsWidthArr.size()];
+        for (int i = 0; i < colsWidthArr.size(); i++) {
+            clsw[i] = colsWidthArr.getInt(i);
+        }
+        final int[] clsa = new int[colsAlign.size()];
+        for (int i = 0; i < colsAlign.size(); i++) {
+            clsa[i] = colsAlign.getInt(i);
+        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printColumnsText(clst, clsw, clsa, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -524,26 +570,33 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      *                     备注: 三个参数的数组长度应该一致, 如果colsText[i]的宽度大于colsWidth[i], 则文本换行
      */
     @ReactMethod
-    public void printColumnsString(ReadableArray colsTextArr, ReadableArray colsWidthArr, ReadableArray colsAlign) {
-        try {
-            final IWoyouService ss = woyouService;
-            final String[] clst = new String[colsTextArr.size()];
-            for (int i = 0; i < colsTextArr.size(); i++) {
-                clst[i] = colsTextArr.getString(i);
-            }
-            final int[] clsw = new int[colsWidthArr.size()];
-            for (int i = 0; i < colsWidthArr.size(); i++) {
-                clsw[i] = colsWidthArr.getInt(i);
-            }
-            final int[] clsa = new int[colsAlign.size()];
-            for (int i = 0; i < colsAlign.size(); i++) {
-                clsa[i] = colsAlign.getInt(i);
-            }
-            ss.printColumnsString(clst, clsw, clsa, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
+    public void printColumnsString(ReadableArray colsTextArr, ReadableArray colsWidthArr, ReadableArray colsAlign, final Promise p) {
+        final IWoyouService ss = woyouService;
+        final String[] clst = new String[colsTextArr.size()];
+        for (int i = 0; i < colsTextArr.size(); i++) {
+            clst[i] = colsTextArr.getString(i);
         }
+        final int[] clsw = new int[colsWidthArr.size()];
+        for (int i = 0; i < colsWidthArr.size(); i++) {
+            clsw[i] = colsWidthArr.getInt(i);
+        }
+        final int[] clsa = new int[colsAlign.size()];
+        for (int i = 0; i < colsAlign.size(); i++) {
+            clsa[i] = colsAlign.getInt(i);
+        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printColumnsString(clst, clsw, clsa, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
 
@@ -553,12 +606,24 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * @param bitmap: 图片bitmap对象(最大宽度384像素，超过无法打印并且回调callback异常函数)
      */
     @ReactMethod
-    public void printBitmap(String data, int width, int height) {
+    public void printBitmap(String data, int width, int height, final Promise p) {
         try {
             final IWoyouService ss = woyouService;
             byte[] decoded = Base64.decode(data, Base64.DEFAULT);
             final Bitmap bitMap = bitMapUtils.decodeBitmap(decoded, width, height);
-            ss.printBitmap(bitMap, null);
+            ThreadPoolManager.getInstance().executeTask(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ss.printBitmap(bitMap, null);
+                        p.resolve(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i(TAG, "ERROR: " + e.getMessage());
+                        p.reject("" + 0, e.getMessage());
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
@@ -584,7 +649,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * @param textposition: 文字位置 0--不打印文字, 1--文字在条码上方, 2--文字在条码下方, 3--条码上下方均打印
      */
     @ReactMethod
-    public void printBarCode(String data, int symbology, int height, int width, int textposition) {
+    public void printBarCode(String data, int symbology, int height, int width, int textposition, final Promise p) {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: ss:" + ss);
         final String d = data;
@@ -593,12 +658,19 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final int w = width;
         final int tp = textposition;
 
-        try {
-            ss.printBarCode(d, s, h, w, tp, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printBarCode(d, s, h, w, tp, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -613,19 +685,25 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      *                    3 -- 纠错级别H (30%)
      */
     @ReactMethod
-    public void printQRCode(String data, int modulesize, int errorlevel) {
+    public void printQRCode(String data, int modulesize, int errorlevel, final Promise p) {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: ss:" + ss);
         final String d = data;
         final int size = modulesize;
         final int level = errorlevel;
-        
-        try {
-            ss.printQRCode(d, size, level, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printQRCode(d, size, level, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -635,16 +713,23 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * @param text: 要打印的文字字符串
      */
     @ReactMethod
-    public void printOriginalText(String text) {
-        try {
-            final IWoyouService ss = woyouService;
-            Log.i(TAG, "come: " + text + " ss:" + ss);
-            final String txt = text;
-            ss.printOriginalText(txt, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+    public void printOriginalText(String text, final Promise p) {
+        final IWoyouService ss = woyouService;
+        Log.i(TAG, "come: " + text + " ss:" + ss);
+        final String txt = text;
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printOriginalText(txt, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -654,13 +739,17 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void commitPrinterBuffer() {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: commit buffter ss:" + ss);
-        
-        try {
-            ss.commitPrinterBuffer();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.commitPrinterBuffer();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -673,13 +762,17 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + clean + " ss:" + ss);
         final boolean c = clean;
-        
-        try {
-            ss.enterPrinterBuffer(c);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.enterPrinterBuffer(c);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -692,39 +785,54 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + commit + " ss:" + ss);
         final boolean com = commit;
-        
-        try {
-            ss.exitPrinterBuffer(com);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.exitPrinterBuffer(com);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                }
+            }
+        });
     }
 
 
     @ReactMethod
-    public void printString(String message) {
-        try {
-            final IWoyouService ss = woyouService;
-            Log.i(TAG, "come: " + message + " ss:" + ss);
-            final String msgs = message;
-            ss.printText(msgs, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+    public void printString(String message, final Promise p) {
+        final IWoyouService ss = woyouService;
+        Log.i(TAG, "come: " + message + " ss:" + ss);
+        final String msgs = message;
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.printText(msgs, null);
+                    p.resolve(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                    p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
     }
 
     @ReactMethod
     public void clearBuffer() {
         final IWoyouService ss = woyouService;
-        
-        try {
-            ss.clearBuffer();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: " + e.getMessage());
-        }
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.clearBuffer();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                }
+            }
+        });
     }
 
     @ReactMethod
