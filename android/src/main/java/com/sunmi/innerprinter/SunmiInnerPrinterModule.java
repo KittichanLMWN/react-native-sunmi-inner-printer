@@ -37,6 +37,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.sunmi.peripheral.printer.SunmiPrinterService;
+
 import android.content.IntentFilter;
 
 import java.util.Map;
@@ -47,6 +49,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     private IWoyouService woyouService;
     private BitmapUtils bitMapUtils;
     private PrinterReceiver receiver = new PrinterReceiver();
+    private SunmiPrinterService sunmiPrinterService;
+
 
     // 缺纸异常
     public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
@@ -72,12 +76,14 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         public void onServiceDisconnected(ComponentName name) {
             Log.i(TAG, "Service disconnected: " + name);
             woyouService = null;
+            sunmiPrinterService = null;
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.i(TAG, "Service connected: " + name);
             woyouService = IWoyouService.Stub.asInterface(service);
+            sunmiPrinterService = SunmiPrinterService.Stub.asInterface(service);
         }
     };
 
@@ -149,8 +155,32 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             // Log and ignore for it is not the madatory constants.
             Log.i(TAG, "ERROR: " + e.getMessage());
         }
-
+        try {
+            constants.put("getPrinterPaper", getPrinterPaper());
+        } catch (Exception e) {
+            // Log and ignore for it is not the madatory constants.
+            Log.i(TAG, "ERROR: " + e.getMessage());
+        }
         return constants;
+    }
+
+        /**
+     * 获取打印机当前的纸张规格
+     * ⼿持打印机默认为58mm的纸张规格，台式打印机默认为80mm的纸张规格，但可以通过增加挡
+     * 板并进⾏打印机配置设置为使⽤58mm的纸张规格，此接⼝会返回当前打印机设置的纸张规格；
+     */
+    @ReactMethod
+    public void getPrinterPaper(final Promise p) {
+        try {
+            p.resolve(getPrinterPaper());
+        } catch (Exception e) {
+            Log.i(TAG, "ERROR: " + e.getMessage());
+            p.reject("" + 0, e.getMessage());
+        }
+    }
+    private int getPrinterPaper() throws Exception {
+        final SunmiPrinterService printerService = sunmiPrinterService;
+        return printerService.getPrinterPaper();
     }
 
 
