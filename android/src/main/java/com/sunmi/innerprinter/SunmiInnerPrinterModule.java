@@ -161,9 +161,44 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             // Log and ignore for it is not the madatory constants.
             Log.i(TAG, "ERROR: " + e.getMessage());
         }
+        try {
+            constants.put("printerState", updatePrinterState());
+        } catch (Exception e) {
+            // Log and ignore for it is not the madatory constants.
+            Log.i(TAG, "ERROR: " + e.getMessage());
+        }
         return constants;
     }
 
+    /**
+     * get printer status as integer
+     * return
+     * 1 printer is normal
+     * 2 Printer update status
+     * 3 Get status exception
+     * 4 out of paper
+     * 5 overheating
+     * 6 open cover
+     * 7 cutter abnormal
+     * 8 cutter recovery
+     * 9 No black mark detected
+     */
+    @ReactMethod
+    public void updatePrinterState(final Promise p) {
+        try {
+            p.resolve(updatePrinterState());
+        } catch (Exception e) {
+            Log.i(TAG, "ERROR: " + e.getMessage());
+            p.reject("" + 0, e.getMessage());
+        }
+    }
+
+    private int updatePrinterState() throws Exception {
+        final IWoyouService printerService = woyouService;
+        return printerService.updatePrinterState();
+    }
+
+    
         /**
      * 获取打印机当前的纸张规格
      * ⼿持打印机默认为58mm的纸张规格，台式打印机默认为80mm的纸张规格，但可以通过增加挡
